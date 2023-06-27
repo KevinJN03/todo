@@ -16,7 +16,31 @@ const input = document.querySelector("[data-new-list-input]")
 const projectAddBtn = document.querySelector("[data-new-list-add]");
 const projectContainer = document.querySelector("#project-container")
 
+function popup(title){
+    
+    let popupContainer = document.createElement("div");
+    popupContainer.classList.add("popup-container");
+    let inputField = document.createElement("input")
+    inputField.setAttribute("id", "input-popup")
+    inputField.setAttribute("type", "text");
+    inputField.setAttribute("value", title.textContent)
+    let confirmButton = document.createElement("button");
+    confirmButton.setAttribute("type", "button");
+    confirmButton.classList.add("confirm-btn");
+    confirmButton.textContent = "Confirm Edit"
 
+
+    confirmButton.addEventListener("click", ()=> {
+    //let input = document.querySelector("input-popup")
+    console.log("value", inputField.value)
+    console.log("confirmbtn clicked")
+    title.textContent = inputField.value;
+    popupContainer.style.display = "none"
+    })
+    popupContainer.append(inputField,confirmButton)
+    // contentContainer.append(popup)
+    contentContainer.append(popupContainer)
+}
 // when a todo is created, it is also generate on the page as well
 function DomTodo(todo){
     const card  = document.createElement("card")
@@ -25,14 +49,25 @@ function DomTodo(todo){
     h1.textContent = todo.title; 
     const h2 = document.createElement("h2");
     h2.textContent = todo.date; 
-    const inputBtn = document.createElement("button");
-    inputBtn.classList.add("todo-input-btn");
+    let inputField = document.createElement("input")
+    inputField.setAttribute("id", "input-popup")
+
+    const inputBtn = document.createElement("button")
+    inputBtn.classList.add("todo-item-input-btn");
     inputBtn.setAttribute("type", "button");
     inputBtn.textContent = "Input";
+    inputBtn.addEventListener("click", ()=> {
+        //h1.textContent = "Click" ;
+        //when clicked it should generate an input
+        popup(h1)
+        console.log("clicked");
 
+    })
     const deleteBtn = document.createElement("button")
     deleteBtn.classList.add("delete-btn");
+    deleteBtn.setAttribute("type", "button");
     deleteBtn.textContent = "Delete"
+    
     deleteBtn.addEventListener("click", ()=> {
         console.log("delete btn clicky")
         const selectedProject = lists.find(obj => obj.id == selectedListId)
@@ -42,11 +77,18 @@ function DomTodo(todo){
     console.log(selectedProject)
         
     })
+    
     // deleteBtn.setAttribute("onclick", `${this}.deleteTodo()` )
     card.append(h1, h2, inputBtn, deleteBtn)
     contentContainer.append(card);
 
 }
+    function createProject(project){
+        lists.push(project);
+        saveAndRender()
+        
+
+    }
     function DomProject(list){
         
         const project = document.createElement("div");
@@ -153,12 +195,7 @@ function clearProjectContainer() {
     return projectContainer
 }
 
-function createProject(project){
-    lists.push(project);
-    saveAndRender()
-    
 
-}
 function getLastId(){
     console.log("list length from get last: ", lists.length)
    if(lists.length == 0) return 0
