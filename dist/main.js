@@ -110,23 +110,43 @@ eval("\n\n/* istanbul ignore next  */\nfunction styleTagTransform(css, styleElem
 
 /***/ }),
 
-/***/ "./src/home.js":
-/*!*********************!*\
-  !*** ./src/home.js ***!
-  \*********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\nconst helloWorld = () => console.log(\"Hello World\")\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (helloWorld);\n\n//# sourceURL=webpack://todo/./src/home.js?");
-
-/***/ }),
-
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ \"./src/style.css\");\n/* harmony import */ var _home__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./home */ \"./src/home.js\");\n\n\n(0,_home__WEBPACK_IMPORTED_MODULE_1__[\"default\"])()\n\n//# sourceURL=webpack://todo/./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ \"./src/style.css\");\n/* harmony import */ var _modules_todo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/todo */ \"./src/modules/todo.js\");\n/* harmony import */ var _modules_UI__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/UI */ \"./src/modules/UI.js\");\n\n\n\n\n\n(0,_modules_UI__WEBPACK_IMPORTED_MODULE_2__[\"default\"])()\n//console.log(todo1.getTodo())\n\n//# sourceURL=webpack://todo/./src/index.js?");
+
+/***/ }),
+
+/***/ "./src/modules/UI.js":
+/*!***************************!*\
+  !*** ./src/modules/UI.js ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ UI)\n/* harmony export */ });\n/* harmony import */ var _projects__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./projects */ \"./src/modules/projects.js\");\n/* harmony import */ var _todo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./todo */ \"./src/modules/todo.js\");\n\n\n\nconst LOCAL_STORAGE_LIST_KEY = \"task.lists\"\nconst LOCAL_STORAGE_SELECTED_LIST_KEY = \"task.selectedListId\"\nlet lists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || [] ;\nlet selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_KEY)\nconst todoAddBtn = document.querySelector(\"[data-todo-add-btn\");\nconst todoInput = document.querySelector(\"data-todo-input\");\nconst contentContainer = document.querySelector(\"[data-content-container]\")\nconst contentTitle = document.querySelector(\"[data-content-title]\")\n\nconst input = document.querySelector(\"[data-new-list-input]\")\nconst projectAddBtn = document.querySelector(\"[data-new-list-add]\");\nconst projectContainer = document.querySelector(\"#project-container\")\n\n\n// when a todo is created, it is also generate on the page as well\nfunction DomTodo(todo){\n    const card  = document.createElement(\"card\")\n    card.classList.add(\"card\");\n    const h1 = document.createElement(\"h1\");\n    h1.textContent = todo.title; \n    const h2 = document.createElement(\"h2\");\n    h2.textContent = todo.date; \n    const inputBtn = document.createElement(\"button\");\n    inputBtn.classList.add(\"todo-input-btn\");\n    inputBtn.setAttribute(\"type\", \"button\");\n    inputBtn.textContent = \"Input\";\n\n    const deleteBtn = document.createElement(\"button\")\n    deleteBtn.classList.add(\"delete-btn\");\n    deleteBtn.textContent = \"Delete\"\n    deleteBtn.addEventListener(\"click\", ()=> {\n        console.log(\"delete btn clicky\")\n        const selectedProject = lists.find(obj => obj.id == selectedListId)\n        //const selectedTodo = selectedProject.toDos.find(x => x == todo)\n        selectedProject.toDos.splice(todo, 1)\n        renderTodo()\n    console.log(selectedProject)\n        \n    })\n    // deleteBtn.setAttribute(\"onclick\", `${this}.deleteTodo()` )\n    card.append(h1, h2, inputBtn, deleteBtn)\n    contentContainer.append(card);\n\n}\n    function DomProject(list){\n        \n        const project = document.createElement(\"div\");\n        project.dataset.listId = list.id;\n        project.classList.add(\"project-list-item\")\n        project.setAttribute(\"id\", list.id)\n        project.innerHTML = `<h3 class= project-list-name>${list.name}</h3>`\n        const deleteBtn = document.createElement(\"button\");\n        deleteBtn.textContent = \"delete\";\n        deleteBtn.classList.add(\"delete-btn\");\n                deleteBtn.addEventListener(\"click\", function(){\n                    project.remove()\n                    selectedListId = \"\"\n                    const index = lists.indexOf(list)\n                    lists.splice(index, 1)\n                    saveAndRender()\n                    \n                })\n                project.append(deleteBtn)\n                projectContainer.append(project) \n\n                return project\n    }\n\n        \nfunction save(){\n    localStorage.setItem(LOCAL_STORAGE_LIST_KEY, JSON.stringify(lists));\n    localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_KEY, selectedListId)\n}\n\n\nfunction render(){\n    clearProjectContainer()\n    renderLists()\n    if(selectedListId == \"\"){\n        contentContainer.style.display = \"none\";\n    } else {\n        \n        contentContainer.style.display  = \"\";\n        renderTodo()\n    }\n   // renderTodo()\n}\n\nfunction renderLists(){\n    \n    lists.forEach(element => {\n        \n        let list = DomProject(element)\n        //console.log(\"element Id: \",element.id, \"selectedListId Id: \",selectedListId)\n        if(list.id === selectedListId) {\n            console.log(\"list Id: \",list.id, \"selectedListId Id: \",selectedListId)\n            list.classList.add(\"active-list\")\n        }\n         \n})\n}\n\nfunction renderTodo(){\n    contentContainer.innerHTML = \"\"\n    const selectedProject = lists.find(obj => obj.id == selectedListId)\n    console.log(selectedProject.toDos)\n    selectedProject.toDos.forEach(element => {\n        DomTodo(element)\n    })\n \n    save()\n}\n\nfunction createTodo(){\n    console.log(\"selectedListId\", selectedListId)\n    todoAddBtn.addEventListener(\"click\", () => {\n        console.log(\"selectedListId for project\", selectedListId)\n        let input = document.querySelector(\"[data-todo-input]\");\n        let todo = new _todo__WEBPACK_IMPORTED_MODULE_1__[\"default\"](input.value,  \"27-06-2023\");\n        //add todo to project list\n        //lists[selectedListId].toDos.push(todo)\n        //let selectedProject = lists.find(obj => obj.id == selectedListId)\n        //selectedProject.toDos.push(todo)\n        lists[selectedListId].toDos.push(todo)\n        console.log(\"selected Id\", selectedListId)\n        console.log(\"selected list\", lists[selectedListId])\n        renderTodo()\n        \n\n\n    })\n\n     \n\n\n\n}\n\n\nfunction saveAndRender(){\n    save();\n    render()\n}\n\n\nfunction clearProjectContainer() {\n    projectContainer.innerHTML = \"\"\n    return projectContainer\n}\n\nfunction createProject(project){\n    lists.push(project);\n    saveAndRender()\n    \n\n}\nfunction getLastId(){\n    let lastId = null\n    //if(lists.length == 0) return\n    if(lists.length != 0) lastId = lists[lists.length -1].id;\n    console.log(\"lastId:\", lastId)\n    if (lastId == null || lastId == \"undefined\") return 0\n    console.log(\"lastId:\", lastId)\n    return lastId + 1\n}\n\nfunction UI(){\nconsole.log(\"UI\");\nrender()\nprojectAddBtn.addEventListener(\"click\", function(){\n    if(input.value == null || input.value === \"\") return\n        const project = new _projects__WEBPACK_IMPORTED_MODULE_0__[\"default\"](input.value, getLastId());\n\n        //project.id = \n        //console.log(\"lastId: \", project.id)\n        createProject(project)\n        \n        console.log(project)\n    \n})\n\n\nprojectContainer.addEventListener(\"click\", e => {\n    if(e.target.tagName.toLowerCase() === \"div\"){\n        console.log((\"clicky\"))\n        selectedListId = e.target.dataset.listId\n        console.log(\"selectedListId\", selectedListId)\n        saveAndRender()\n    }\n})\n\n\ncreateTodo()\n\n}\n\n \n\n//# sourceURL=webpack://todo/./src/modules/UI.js?");
+
+/***/ }),
+
+/***/ "./src/modules/projects.js":
+/*!*********************************!*\
+  !*** ./src/modules/projects.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Project)\n/* harmony export */ });\n\n\nclass Project {\n\n   \n    constructor(name, id){\n       \n        this.name = name,\n        this.id = id \n        this.toDos = []\n    }\n\n    appendToDo(todo) {\n        this.toDos.push(todo)\n    }\n\n    loadTodo(){\n        return this.Project\n    }\n\n\n    removeProject(){\n        console.log(\"project\",this.Project)\n        delete this.Project\n        \n    }\n\n    \n}\n\n//# sourceURL=webpack://todo/./src/modules/projects.js?");
+
+/***/ }),
+
+/***/ "./src/modules/todo.js":
+/*!*****************************!*\
+  !*** ./src/modules/todo.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Todo)\n/* harmony export */ });\n class Todo {\n    constructor(title, date){\n        this.title = title;\n        this.date = date;\n    }\n }\n\n//# sourceURL=webpack://todo/./src/modules/todo.js?");
 
 /***/ })
 

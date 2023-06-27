@@ -25,17 +25,23 @@
 
             <h1>Projects</h1>
             <div id="project-container"></div>
-            <button type="button" class="btn">+ Add Project</button>
+            <button type="button" class="btn" id="project-btn">+ Add Project</button>
             <div class="add-project-popup">
-                <input type="text" id="popup-input">
-                <button type="button" id="popup-add-btn"> Add</button>
+                <input type="text" id="popup-input" data-new-list-input>
+                <button type="button" id="popup-add-btn" data-new-list-add> Add</button>
                 <button type="button" id="popup-cancel-btn">Cancel</button>
             </div>
         </div>
 
        <div id="content">
-        <h1 id="content-title">Inbox</h1>
-        <div id="content-container"></div>
+        <h1 id="content-title" data-content-title>Inbox</h1>
+        
+        <div id="content-container" data-content-container>
+        </div>
+        <div id="input-container" data-input-container>
+            <input type="text" data-todo-input>
+            <button type="button" data-todo-add-btn>Add Todo</button>
+        </div>
        </div> 
     </main>
     

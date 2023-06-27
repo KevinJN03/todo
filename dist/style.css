@@ -64,3 +64,37 @@ main {
     display: flex;
     flex-direction: column
 }
+
+#project-container .project-list-item {
+    width: 80%;
+    background: transparent;
+    display: flex;
+    flex-direction: row;
+    /* gap: 50px; */
+    height: 40px;
+    font-size: 1.2rem;
+    align-items: center;
+    justify-content: left;
+    border: 2px solid black;
+    padding: 10px;
+}
+
+.project-list-item .delete-btn {
+    display: inherit;
+    
+    justify-self: right;
+    
+    
+}
+
+.project-list-name {
+    display: flex;
+    
+    
+}
+
+
+.active-list {
+    font-weight: bold;
+    color: green
+}

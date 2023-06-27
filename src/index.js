@@ -1,3 +1,7 @@
 import "./style.css"
-import helloWorld from "./home"
-helloWorld()
+import Todo from "./modules/todo"
+import UI from "./modules/UI"
+
+
+UI()
+//console.log(todo1.getTodo())
