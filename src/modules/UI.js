@@ -1,6 +1,8 @@
 
 import Project from "./projects";
 import Todo from "./todo";
+
+
 const LOCAL_STORAGE_LIST_KEY = "task.lists"
 const LOCAL_STORAGE_SELECTED_LIST_KEY = "task.selectedListId"
 let lists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || [] ;
@@ -78,7 +80,7 @@ function save(){
 
 function render(){
     clearProjectContainer()
-    renderLists()
+   renderLists()
     if(selectedListId == ""){
         contentContainer.style.display = "none";
     } else {
@@ -93,8 +95,8 @@ function renderLists(){
     
     lists.forEach(element => {
         
-        let list = DomProject(element)
-        //console.log("element Id: ",element.id, "selectedListId Id: ",selectedListId)
+       let list = DomProject(element)
+        console.log("element Id: ",element.id, "selectedListId Id: ",selectedListId)
         if(list.id === selectedListId) {
             console.log("list Id: ",list.id, "selectedListId Id: ",selectedListId)
             list.classList.add("active-list")
@@ -158,27 +160,28 @@ function createProject(project){
 
 }
 function getLastId(){
-    let lastId = null
-    //if(lists.length == 0) return
-    if(lists.length != 0) lastId = lists[lists.length -1].id;
-    console.log("lastId:", lastId)
-    if (lastId == null || lastId == "undefined") return 0
-    console.log("lastId:", lastId)
-    return lastId + 1
+    console.log("list length from get last: ", lists.length)
+   if(lists.length == 0) return 0
+   else if(lists.length > 0){
+   return  lists[lists.length -1].id + 1
+   }
 }
 
 export default function UI(){
 console.log("UI");
+//localStorage.clear()
+console.log("lists", lists)
 render()
 projectAddBtn.addEventListener("click", function(){
+    let input = document.querySelector("[data-new-list-input]")
     if(input.value == null || input.value === "") return
         const project = new Project(input.value, getLastId());
 
-        //project.id = 
-        //console.log("lastId: ", project.id)
+        selectedListId = project.id
+        console.log("ProjectId: ", project.id)
         createProject(project)
         
-        console.log(project)
+        //console.log(project)
     
 })
 
