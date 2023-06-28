@@ -3,4 +3,8 @@
         this.title = title;
         this.date = date;
     }
+
+    updateTodo(str){
+        this.title = str
+    }
  }

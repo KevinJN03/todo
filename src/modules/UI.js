@@ -10,38 +10,31 @@ let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_KEY)
 const todoAddBtn = document.querySelector("[data-todo-add-btn");
 const todoInput = document.querySelector("data-todo-input");
 const contentContainer = document.querySelector("[data-content-container]")
-const contentTitle = document.querySelector("[data-content-title]")
+let contentTitle = document.querySelector("[data-content-title]")
 
 const input = document.querySelector("[data-new-list-input]")
 const projectAddBtn = document.querySelector("[data-new-list-add]");
 const projectContainer = document.querySelector("#project-container")
 
-function popup(title){
-    
+function popup(todo){
     let popupContainer = document.createElement("div");
     popupContainer.classList.add("popup-container");
     let inputField = document.createElement("input")
     inputField.setAttribute("id", "input-popup")
     inputField.setAttribute("type", "text");
-    inputField.setAttribute("value", title.textContent)
+    inputField.setAttribute("value", todo.title)
     let confirmButton = document.createElement("button");
     confirmButton.setAttribute("type", "button");
     confirmButton.classList.add("confirm-btn");
     confirmButton.textContent = "Confirm Edit"
-
-
     confirmButton.addEventListener("click", ()=> {
-    //let input = document.querySelector("input-popup")
-    console.log("value", inputField.value)
-    console.log("confirmbtn clicked")
-    title.textContent = inputField.value;
+    todo.title = inputField.value;
     popupContainer.style.display = "none"
+    renderTodo()
     })
     popupContainer.append(inputField,confirmButton)
-    // contentContainer.append(popup)
     contentContainer.append(popupContainer)
 }
-// when a todo is created, it is also generate on the page as well
 function DomTodo(todo){
     const card  = document.createElement("card")
     card.classList.add("card");
@@ -57,10 +50,7 @@ function DomTodo(todo){
     inputBtn.setAttribute("type", "button");
     inputBtn.textContent = "Input";
     inputBtn.addEventListener("click", ()=> {
-        //h1.textContent = "Click" ;
-        //when clicked it should generate an input
-        popup(h1)
-        console.log("clicked");
+        popup(todo)
 
     })
     const deleteBtn = document.createElement("button")
@@ -136,12 +126,15 @@ function render(){
 function renderLists(){
     
     lists.forEach(element => {
-        
+       // console.log("Element:", element)
        let list = DomProject(element)
-        console.log("element Id: ",element.id, "selectedListId Id: ",selectedListId)
+        //console.log("element Id: ",element.id, "selectedListId Id: ",selectedListId)
         if(list.id === selectedListId) {
-            console.log("list Id: ",list.id, "selectedListId Id: ",selectedListId)
+            //console.log("list Id: ",list.id, "selectedListId Id: ",selectedListId)
+
+            //console.log("Project Title:", list.title)
             list.classList.add("active-list")
+            contentTitle.textContent  = lists[selectedListId].name
         }
          
 })
