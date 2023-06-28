@@ -35,6 +35,10 @@ function popup(todo){
     popupContainer.append(inputField,confirmButton)
     contentContainer.append(popupContainer)
 }
+function clear(){
+    let input = document.querySelector("[data-todo-input]")
+    input.value = ""
+}
 function DomTodo(todo){
     const card  = document.createElement("card")
     card.classList.add("card");
@@ -143,7 +147,8 @@ function renderLists(){
 function renderTodo(){
     contentContainer.innerHTML = ""
     const selectedProject = lists.find(obj => obj.id == selectedListId)
-    console.log(selectedProject.toDos)
+    console.log(selectedProject, "ddd")
+    if (selectedProject == undefined) return
     selectedProject.toDos.forEach(element => {
         DomTodo(element)
     })
@@ -164,6 +169,7 @@ function createTodo(){
         lists[selectedListId].toDos.push(todo)
         console.log("selected Id", selectedListId)
         console.log("selected list", lists[selectedListId])
+        clear()
         renderTodo()
         
 
@@ -214,6 +220,8 @@ projectAddBtn.addEventListener("click", function(){
         //console.log(project)
     
 })
+
+
 
 
 projectContainer.addEventListener("click", e => {
