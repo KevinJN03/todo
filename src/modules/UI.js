@@ -122,7 +122,6 @@ function clear(){
     let input2 = document.querySelector("[data-new-list-input]")
     input2.value = ""
     input.value = ""
-    contentTitle.textContent = ""
     contentContainer.innerHTML = ""
 }
 function DomTodo(todo){
@@ -195,7 +194,7 @@ function DomTodo(todo){
 
                 project.append(deleteBtn)
                 projectContainer.append(project) 
-                return {project, "id":list.id}
+                return {project, "id":list.id, "name": list.name}
     }
 
         
@@ -233,7 +232,7 @@ function renderLists(){
             list.project.classList.add("active-list")
     
             console.log("lists[selectedListId]", lists[selectedListId])
-            contentTitle.textContent  = lists[selectedListId].name
+            contentTitle.textContent  = list.name
         }        
         }
         
@@ -258,11 +257,14 @@ function createTodo(){
         let input = document.querySelector("[data-todo-input]");
         const dateInput = document.querySelector("[data-todo-date-input]")
         let newDateInput = format(parseISO(dateInput.value), 'MM/dd/yyyy')
-
+       
         let todo = new Todo(input.value,  newDateInput);
-        lists[selectedListId].toDos.push(todo)
+        const selectedProject = lists.find(obj => obj.id == selectedListId)
+        selectedProject.toDos.push(todo)
+        //lists[selectedListId].toDos.push(todo)
        inputContainerBtn.style.display = "";
-       inputContainer.style.display = "none"
+       inputContainer.style.display = "none";
+       
         clear()
       renderTodo()
     })
