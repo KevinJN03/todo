@@ -18,33 +18,36 @@
     <main>
         <div id="sidebar">
             <div id="btn-container">
-                <button type="button" id="inbox-btn" class="btn">Inbox</button>
-                <button  type="button" id="today" class="btn">Today</button>
-                <button  type="button" id="week-btn" class="btn">This Week</button>
+                <button type="button" id="home-btn" class="btn" data-home-btn><i class="fa-solid fa-house"></i> Home</button>
+                <button  type="button" id="today" class="btn" data-btn-today><i class="fa-solid fa-calendar-day"></i> Today</button>
+
+                <button  type="button" id="week-btn" class="btn" data-btn-week><i class="fa-solid fa-calendar-week"></i>This Week</button>
             </div>
 
             <h1>Projects</h1>
             <div id="project-container"></div>
-            <button type="button" class="btn" id="project-btn">+ Add Project</button>
+            <button type="button" class="btn" id="project-btn"><i class="fa-sharp fa-solid fa-plus"></i>Add Project</button>
             <div class="add-project-popup">
                 <input type="text" id="popup-input" data-new-list-input>
-                <button type="button" id="popup-add-btn" data-new-list-add> Add</button>
-                <button type="button" id="popup-cancel-btn">Cancel</button>
+                <button type="button" id="popup-add-btn" data-new-list-add><i class="fa-sharp fa-solid fa-plus"></i></button>
+                <button type="button" id="popup-cancel-btn"><i class="fa-sharp fa-solid fa-xmark"></i></button>
             </div>
         </div>
 
        <div id="content">
-        <h1 id="content-title" data-content-title>Inbox</h1>
+        <h1 id="content-title" data-content-title>Home</h1>
         
         <div id="content-container" data-content-container>
         </div>
         <div id="input-container" data-input-container>
-            <input type="text" data-todo-input>
-            <button type="button" data-todo-add-btn>Add Todo</button>
+            
+            <input type="text" data-todo-input required>
+            <input type="date" data-todo-date-input required>
+            <button type="button" data-todo-add-btn><i class="fa-sharp fa-solid fa-plus"></i></button>
         </div>
        </div> 
     </main>
-    
+    <script src="https://kit.fontawesome.com/8de37b55b8.js" crossorigin="anonymous"></script>
     <script src="./main.js"></script>
 </body>
 </html>
