@@ -1,4 +1,8 @@
-
+:root {
+    --indigo: #3F51B5;
+    --white:  #FFFFFF;
+    --blue-gray: #607D8B;
+}
 *{
     font-family: 'Poppins', sans-serif;
     margin: 0;
@@ -102,3 +106,6 @@ main {
 button{
     padding: 20px;
 }
+
+/* card section */
+

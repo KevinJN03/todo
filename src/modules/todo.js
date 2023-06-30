@@ -4,7 +4,7 @@
         this.date = date;
     }
 
-    updateTodo(str){
-        this.title = str
+    updateTodoTitle(str){
+        Todo.title = str
     }
  }
