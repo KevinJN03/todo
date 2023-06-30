@@ -9,21 +9,19 @@ function todayBtnClick(){
         console.log("today btn clicked")
         clear()
       contentTitle.textContent = "Today"
-      inputContainer.style.display = "none"
+      inputContainerBtn.style.display = "none"
         const todayDate = new Date()
         const tomorrowDate = addDays(todayDate, 1)
         lists.forEach(project => {
-
             project.toDos.forEach(todo => {
                 console.log(todo.date)
                 if(todo.date == format(todayDate, 'MM/dd/yyyy') || todo.date == format(tomorrowDate, 'MM/dd/yyyy')){
-                    DomTodo(todo)
+                    let todoCreation =DomTodo(todo)
+                    todoCreation.h1.textContent += ` (${project.name})`
                 }
             })
-            //console.log("project: ", project.toDos)
         })
-        console.log("todayDate: ", todayDate)
-        console.log("tomorrowDate: ", tomorrowDate)
+        optionSelection(1)
 
     })
 }
@@ -43,12 +41,12 @@ function weekBtnClick(){
                 console.log("isSame: ",isSameDay(todoDate,todayDate ))
                 //console.log("parse date:", parse(todo.date,'MM/dd/yyyy', new Date()))
                 if( isBefore(todoDate, weekDate) || isSameDay(todoDate,todayDate )){
-                     DomTodo(todo)
+                    let todoCreation =DomTodo(todo)
+                    todoCreation.h1.textContent += ` (${project.name})`
                  }
             })
         })
-        console.log("todayDate: ", todayDate)
-        console.log("tomorrowDate: ", weekDate)
+       optionSelection(2)
     })
 }
 
@@ -71,32 +69,58 @@ const projectAddBtn = document.querySelector("[data-new-list-add]");
 const projectContainer = document.querySelector("#project-container")
 const todayBtn = document.querySelector("[data-btn-today]");
 const inputContainer = document.querySelector("[data-input-container]")
-
+const projectBtn = document.querySelector("#project-btn")
+const cancelProjectBtn = document.querySelector("#popup-cancel-btn")
+const projectPopup = document.querySelector(".add-project-popup")
+const inputContainerBtn = document.querySelector("#input-container-btn")
+const cancelTodoBtn = document.querySelector("[data-todo-cancel-btn]")
 const weekBtn = document.querySelector("[data-btn-week]");
+const menuBtn = document.querySelectorAll(".menu-btn")
 
 
 function popup(todo){
     let popupContainer = document.createElement("div");
+    let popupContent = document.createElement("div");
+    popupContent.classList.add("popup-content");
     popupContainer.classList.add("popup-container");
     let inputField = document.createElement("input")
     inputField.setAttribute("id", "input-popup")
     inputField.setAttribute("type", "text");
     inputField.setAttribute("value", todo.title)
+    let dateInputField = document.createElement("input");
+    dateInputField.setAttribute("id", "input-date-popup")
+    dateInputField.setAttribute("type", "date");
+    dateInputField.setAttribute("value", todo.date)
     let confirmButton = document.createElement("button");
     confirmButton.setAttribute("type", "button");
     confirmButton.classList.add("confirm-btn");
     confirmButton.textContent = "Confirm Edit"
+
     confirmButton.addEventListener("click", ()=> {
-       // todo.updateTodoTitle(inputField.value)
    todo.title = inputField.value;
+   todo.date = format(parseISO(dateInputField.value), 'MM/dd/yyyy')
+   //console.log("todo.date", todo.date);
+   //console.log("dateInputField", format(parseISO(dateInputField.value), 'MM/dd/yyyy'))
     popupContainer.style.display = "none"
     renderTodo()
     })
-    popupContainer.append(inputField,confirmButton)
+    let cancelBtn = document.createElement("button");
+    cancelBtn.classList.add("cancel-btn");
+    cancelBtn.textContent = "Cancel";
+    cancelBtn.addEventListener("click", ()=> {
+        popupContainer.style.display = "none"
+    })
+    const itemsContainer = document.createElement("div")
+    itemsContainer.classList.add("items-container");
+    itemsContainer.append(inputField, dateInputField,confirmButton, cancelBtn)
+    popupContent.append(itemsContainer)
+    popupContainer.append(popupContent)
     contentContainer.append(popupContainer)
 }
 function clear(){
     let input = document.querySelector("[data-todo-input]")
+    let input2 = document.querySelector("[data-new-list-input]")
+    input2.value = ""
     input.value = ""
     contentTitle.textContent = ""
     contentContainer.innerHTML = ""
@@ -106,6 +130,8 @@ function DomTodo(todo){
     card.classList.add("card");
     const h1 = document.createElement("h1");
     h1.textContent = todo.title; 
+    const btnContainer = document.createElement("div");
+    btnContainer.classList.add("date-button-container")
     const h2 = document.createElement("h2");
     h2.textContent = todo.date; 
     let inputField = document.createElement("input")
@@ -133,8 +159,10 @@ function DomTodo(todo){
     console.log(selectedProject)      
     }) 
     // deleteBtn.setAttribute("onclick", `${this}.deleteTodo()` )
-    card.append(h1, h2, inputBtn, deleteBtn)
+    btnContainer.append(h2, inputBtn, deleteBtn)
+    card.append(h1, btnContainer)
     contentContainer.append(card);
+    return {card, h1}
 
 }
     function createProject(project){
@@ -149,6 +177,7 @@ function DomTodo(todo){
         project.innerHTML = `<h3 class= project-list-name>${list.name}</h3>`
         const deleteBtn = document.createElement("button");
         deleteBtn.innerHTML = `<i class="fa-solid fa-trash"></i>`;
+        deleteBtn.style.display = "none"
         deleteBtn.classList.add("delete-btn");
                 deleteBtn.addEventListener("click", function(){
                     project.remove()
@@ -157,9 +186,16 @@ function DomTodo(todo){
                     lists.splice(index, 1)
                     saveAndRender()          
                 })
+                project.addEventListener("mouseover", ()=>{
+                    deleteBtn.style.display = ""
+                })
+                project.addEventListener("mouseleave", ()=>{
+                    deleteBtn.style.display = "none"
+                })
+
                 project.append(deleteBtn)
                 projectContainer.append(project) 
-                return project
+                return list.id
     }
 
         
@@ -187,12 +223,13 @@ function renderLists(){
       
        if(element != lists[0])
      {
-            let list = DomProject(element)
+           let list = DomProject(element)
     
        
-        console.log("element Id: ",element.id, "list Id: ",list.id, "selectedListId: ", selectedListId)
-        if(list.id === selectedListId) {
-  
+        //console.log("element Id: ",element.id, "list Id: ",list.id, "selectedListId: ", selectedListId)
+        console.log("list render:", list)
+        if(list === selectedListId) {
+           // clearSelection()
             list.classList.add("active-list")
     
             console.log("lists[selectedListId]", lists[selectedListId])
@@ -215,17 +252,15 @@ function renderTodo(){
 }
 
 function createTodo(){
-    console.log("selectedListId", selectedListId)
     todoAddBtn.addEventListener("click", () => {
-        console.log("selectedListId for project", selectedListId)
         let input = document.querySelector("[data-todo-input]");
         const dateInput = document.querySelector("[data-todo-date-input]")
         let newDateInput = format(parseISO(dateInput.value), 'MM/dd/yyyy')
-        //console.log("date Value:", )
+
         let todo = new Todo(input.value,  newDateInput);
         lists[selectedListId].toDos.push(todo)
-        //console.log("selected Id", selectedListId)
-        //console.log("selected list", lists[selectedListId])
+       inputContainerBtn.style.display = "";
+       inputContainer.style.display = "none"
         clear()
       renderTodo()
     })
@@ -252,23 +287,52 @@ function getLastId(){
    }
 }
 
-function homeBtnClick(home){
-    home.addEventListener("click", ()=>{
-        console.log("home button clicked")
+function homeBtnClick(){
+    homeBtn.addEventListener("click", ()=>{
+        
         contentTitle.textContent = "Home"
-        inputContainer.style.display = ""
+        inputContainerBtn.style.display = ""
         selectedListId = 0;
         const activeList = document.querySelector(".active-list");
        if(activeList) activeList.classList.remove("active-list")
+       optionSelection(0)
         renderTodo()
-        //createTodo()
-        
-        console.log(lists[0])
+
     })
+}
+
+function optionSelection(num){
+    
+    clearSelection()
+    for(let i=0; i< menuBtn.length; i++){
+        if(i == num){
+            menuBtn[i].classList.add("active-list");
+
+        }else {
+            menuBtn[i].classList.remove("active-list");
+        }
+    }
+}
+
+function clearSelection() {
+    for(let i=0; i< menuBtn.length; i++){
+        if(menuBtn[i].classList.contains("active-list")){
+          menuBtn[i].classList.remove("active-list")  
+        } 
+       // return
+        
+    }
+
+const projectItems =document.querySelectorAll(".project-list-item ")
+    for(let i=0; i< projectItems.length; i++){
+        if(projectItems[i].classList.contains("active-list")){
+          projectItems[i].classList.remove("active-list")  
+        }      
+    }
 }
 export default function UI(){
     localStorage.clear()
-   homeBtnClick(homeBtn)
+   homeBtnClick()
    todayBtnClick()
    weekBtnClick()
 console.log("UI");
@@ -279,18 +343,32 @@ projectAddBtn.addEventListener("click", function(){
     let input = document.querySelector("[data-new-list-input]")
     if(input.value == null || input.value === "") return
         const project = new Project(input.value, getLastId());
-
         selectedListId = project.id
         console.log("ProjectId: ", project.id)
         createProject(project)
-        
-        //console.log(project)
-    
+        projectPopup.style.display = "none"
+        projectBtn.style.display = ""
 })
 
+projectBtn.addEventListener("click", ()=> {
+    projectBtn.style.display = "none"
+    projectPopup.style.display = ""
+})
+cancelProjectBtn.addEventListener("click", ()=> {
+    projectPopup.style.display = "none"
+    projectBtn.style.display = ""
+    clear()
+})
 
+inputContainerBtn.addEventListener("click", ()=> {
+    inputContainer.style.display = ""
+    inputContainerBtn.style.display = "none"
+})
 
-
+cancelTodoBtn.addEventListener("click", ()=> {
+    inputContainer.style.display = "none";
+    inputContainerBtn.style.display = ""
+})
 projectContainer.addEventListener("click", e => {
     if(e.target.tagName.toLowerCase() === "div"){
         console.log(("clicky"))
