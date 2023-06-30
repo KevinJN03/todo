@@ -276,6 +276,7 @@ background-color: coral
 
 }
 #input-container {
+    
     width: 100%;
     display: grid;
     grid-template-columns: 5fr 1fr;
@@ -327,7 +328,7 @@ background-color: coral
 
 }
 .popup-content {
-    background-color: #fefefe;
+    background-color: var(--white);
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;

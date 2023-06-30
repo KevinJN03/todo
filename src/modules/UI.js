@@ -2,11 +2,11 @@
 
 import Project from "./projects";
 import Todo from "./todo";
-import { compareAsc, format, addDays, addWeeks, parseISO, parse, isBefore, isAfter, isSameDay, nextMonday } from 'date-fns'
+import { format, addDays, parseISO, parse, isBefore, isSameDay, nextMonday } from 'date-fns'
 
 function todayBtnClick(){
     todayBtn.addEventListener("click", ()=> {
-        console.log("today btn clicked")
+        inputContainer.style.display = "none"
         clear()
       contentTitle.textContent = "Today"
       inputContainerBtn.style.display = "none"
@@ -195,7 +195,7 @@ function DomTodo(todo){
 
                 project.append(deleteBtn)
                 projectContainer.append(project) 
-                return list.id
+                return {project, "id":list.id}
     }
 
         
@@ -227,10 +227,10 @@ function renderLists(){
     
        
         //console.log("element Id: ",element.id, "list Id: ",list.id, "selectedListId: ", selectedListId)
-        console.log("list render:", list)
-        if(list === selectedListId) {
-           // clearSelection()
-            list.classList.add("active-list")
+        console.log("list render:", )
+        if(list.id == selectedListId) {
+           clearSelection()
+            list.project.classList.add("active-list")
     
             console.log("lists[selectedListId]", lists[selectedListId])
             contentTitle.textContent  = lists[selectedListId].name
@@ -241,7 +241,9 @@ function renderLists(){
 }
 
 function renderTodo(){
-    contentContainer.innerHTML = ""
+    contentContainer.innerHTML = "";
+    inputContainer.style.display ="none"
+    inputContainerBtn.style.display = ""
     const selectedProject = lists.find(obj => obj.id == selectedListId)
     console.log("renderTodo", selectedProject)
     if (selectedProject == undefined) return
