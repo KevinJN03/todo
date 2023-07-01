@@ -157,9 +157,30 @@ function DomTodo(todo){
         renderTodo()
     console.log(selectedProject)      
     }) 
-    // deleteBtn.setAttribute("onclick", `${this}.deleteTodo()` )
+    const div = document.createElement("div");
+    div.setAttribute("id", "checkbox-title-container")
+    const checkbox = document.createElement("input");
+    const span = document.createElement("span")
+    span.classList.add("bigcheck");
+
+    checkbox.setAttribute("type", "checkbox");
+    checkbox.setAttribute("id", "checkbox");
+    checkbox.addEventListener("change", () => {
+        console.log("checkbox clicked")
+        if (checkbox.checked) {
+            console.log("Checkbox is checked..");
+            todo.isComplete = true;
+            console.log(todo)
+          } else {
+            console.log("Checkbox is not checked..");
+            todo.isComplete = false;
+            console.log(todo)
+          }
+    })
+    span.append(checkbox)
+    div.append(span, h1)
     btnContainer.append(h2, inputBtn, deleteBtn)
-    card.append(h1, btnContainer)
+    card.append(div, btnContainer)
     contentContainer.append(card);
     return {card, h1}
 
